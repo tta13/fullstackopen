@@ -34,18 +34,28 @@ const App = () => {
   const addNewContact = (event) => {
     event.preventDefault()
 
-    if(contacts.filter(value => value.name === newName).length !== 0) {
-      alert(`${newName} is already in the phonebook`)
-      return
-    }
+    const existingContacts = contacts.filter(value => value.name === newName);
 
-    people
-      .createContact({ name: newName, number: newPhoneNumber })
-      .then(newContact => {
-        setContacts(contacts.concat(newContact))
-        setNewName('')
-        setNewPhoneNumber('')
-      })    
+    if(existingContacts.length !== 0) {
+      if(window.confirm(`${newName} is already in the phonebook. Replace the old number with this new one?`)) {
+        people
+          .updateContact({...existingContacts[0], number: newPhoneNumber})
+          .then(newContact => {
+            setContacts(contacts.map(c => c.id !== existingContacts[0].id ? c : newContact))
+            setNewName('')
+            setNewPhoneNumber('')
+          })
+      }
+      
+    } else {
+      people
+        .createContact({ name: newName, number: newPhoneNumber })
+        .then(newContact => {
+          setContacts(contacts.concat(newContact))
+          setNewName('')
+          setNewPhoneNumber('')
+        })   
+    }
   }
 
   const deleteContact = (person) => {

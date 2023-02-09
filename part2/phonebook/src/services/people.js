@@ -7,13 +7,17 @@ function getContact(id=undefined) {
 }
 
 const createContact = person => axios
-    .post(baseUrl, person)
-    .then(response => response.data);
+  .post(baseUrl, person)
+  .then(response => response.data);
 
 const deleteContact = id => axios
-    .delete(`${baseUrl}/${id}`)
-    .then(response => response.data);
+  .delete(`${baseUrl}/${id}`)
+  .then(response => response.data);
 
-const people = { getContact, createContact, deleteContact };
+const updateContact = updatedContact => axios
+  .put(`${baseUrl}/${updatedContact.id}`, updatedContact)
+  .then(response => response.data);
+
+const people = { getContact, createContact, deleteContact, updateContact };
 
 export default people;
