@@ -25,7 +25,7 @@ const App = () => {
   useEffect(() => {
     console.log('effect')
     people
-      .get()
+      .getContact()
       .then(data => {
         setContacts(data)
       })
@@ -40,12 +40,23 @@ const App = () => {
     }
 
     people
-      .create({ name: newName, number: newPhoneNumber })
+      .createContact({ name: newName, number: newPhoneNumber })
       .then(newContact => {
         setContacts(contacts.concat(newContact))
         setNewName('')
         setNewPhoneNumber('')
       })    
+  }
+
+  const deleteContact = (person) => {
+    if(window.confirm(`Delete ${person.name}?`)) {
+      people
+        .deleteContact(person.id)
+        .then(response => {
+          console.log(response)
+          setContacts(contacts.filter(c => c.id !== person.id))
+        });
+    }
   }
 
   return (
@@ -60,7 +71,11 @@ const App = () => {
         handlePhoneNumberChange={handlePhoneNumberChange}
       />
       <h2>Numbers</h2>
-      <Contacts people={contacts} query={query}/>
+      <Contacts 
+        people={contacts} 
+        query={query}
+        onDelete={deleteContact}
+      />
     </div>
   )
 }

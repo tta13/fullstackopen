@@ -1,4 +1,4 @@
-const Contacts = ({people, query}) => {
+const Contacts = ({people, query, onDelete}) => {
   const filterShownContacts = () => {
     const result = people.filter(c => c.name.toLowerCase().includes(query.toLowerCase()))
     return result;
@@ -6,7 +6,14 @@ const Contacts = ({people, query}) => {
 
   return (
     <ul>
-      {filterShownContacts().map(person => <li key={person.name}>{person.name} {person.number}</li>)}
+      {filterShownContacts().map(person => {
+          return (
+            <li key={person.name}>
+              {person.name} {person.number} <button onClick={() => onDelete(person)}>delete</button>
+            </li>            
+          )
+        })
+      }      
     </ul>
   )
 }
