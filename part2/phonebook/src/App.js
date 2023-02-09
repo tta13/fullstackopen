@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import ContactForm from './components/ContactForm'
 import Contacts from './components/Contacts'
 import Filter from './components/Filter'
-import axios from 'axios'
+import people from './services/people'
 
 const App = () => {
   const [contacts, setContacts] = useState([])
@@ -24,23 +24,28 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setContacts(response.data)
+    people
+      .get()
+      .then(data => {
+        setContacts(data)
       })
   }, [])  
 
   const addNewContact = (event) => {
     event.preventDefault()
+
     if(contacts.filter(value => value.name === newName).length !== 0) {
       alert(`${newName} is already in the phonebook`)
       return
     }
-    setContacts(contacts.concat({ name: newName, number: newPhoneNumber }))
-    setNewName('')
-    setNewPhoneNumber('')
+
+    people
+      .create({ name: newName, number: newPhoneNumber })
+      .then(newContact => {
+        setContacts(contacts.concat(newContact))
+        setNewName('')
+        setNewPhoneNumber('')
+      })    
   }
 
   return (
