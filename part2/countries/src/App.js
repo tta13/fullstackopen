@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 function App() {
   const [countries, setCountries] = useState([]);
   const [query, setQuery] = useState('');
+  const [selectedCountries, setSelectedCountries] = useState([]);
 
   useEffect(() => {
     console.log('effect')
@@ -17,19 +18,20 @@ function App() {
   }, []);
 
   const handleQueryChange = (event) => {
-    setQuery(event.target.value);
+    const q = event.target.value;
+    setQuery(q);
+    setSelectedCountries(countries.filter(c => c.name.common.toLowerCase().includes(q.toLowerCase())));
   }
 
-  const filterCountries = () => {
-    const result = countries.filter(c => c.name.common.toLowerCase().includes(query.toLowerCase()))
-    return result;
+  const selectCountry = (country) => {
+    setSelectedCountries([country]);
   }
 
   return (
     <div>
       <h1>Countries</h1>
       <Filter query={query} handleQueryChange={handleQueryChange}/>
-      <Country countries={filterCountries()} />
+      <Country countries={selectedCountries} selectCountry={selectCountry}/>
     </div>
   );
 }
