@@ -52,6 +52,12 @@ const App = () => {
               setMessage(null)
             }, 3000)
           })
+          .catch(error => {
+            setMessage({ text: `${newName} has been already removed from server`, type: 'error' })
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
+          })
       }
       
     } else {
@@ -76,6 +82,12 @@ const App = () => {
         .then(response => {
           setContacts(contacts.filter(c => c.id !== person.id))
           setMessage({ text: `Deleted contact: ${person.name}`, type: 'success' })
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+        })
+        .catch(error => {
+          setMessage({ text: `${person.name} has been already removed from server`, type: 'error' })
           setTimeout(() => {
             setMessage(null)
           }, 3000)
