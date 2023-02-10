@@ -28,9 +28,11 @@ function App() {
       weather
         .getWeather({ lat, lon })
         .then(data => {
+          const time = new Date(0);
+          time.setUTCSeconds(data.dt + data.timezone);
           setCurrentWeather({ 
             city: capitalName,
-            time: data.dt,
+            time: time.toUTCString(),
             temperature: data.main.temp,
             iconSrc: `${weather.iconsBaseUrl}/${data.weather[0].icon}@4x.png`,
             wind: data.wind.speed
@@ -40,6 +42,8 @@ function App() {
           if(error.response.status === 401)
             console.log('Unauthorized');
         });
+    } else {
+      setCurrentWeather(null);
     }
   }, [selectedCountries]);
 
