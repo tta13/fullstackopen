@@ -1,5 +1,10 @@
 const Country = ({ countries, selectCountry }) => {
-  if(countries.length > 10) {
+  if(!countries || countries.length === 0) {
+    return (
+      <div>No matches, specify another filter.</div>
+    )
+  }
+  else if(countries.length > 10) {
     return (
       <div>Too many matches, specify another filter.</div>
     )
@@ -16,11 +21,6 @@ const Country = ({ countries, selectCountry }) => {
           )          
         })}
       </div>
-    )
-  }
-  else if(countries.length === 0) {
-    return (
-      <div>No matches, specify another filter.</div>
     )
   }
 
