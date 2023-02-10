@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import ContactForm from './components/ContactForm'
 import Contacts from './components/Contacts'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import people from './services/people'
 
 const App = () => {
@@ -9,6 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhoneNumber, setNewPhoneNumber] = useState('')
   const [query, setQuery] = useState('')
+  const [message, setMessage] = useState(null)
+
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -44,6 +47,10 @@ const App = () => {
             setContacts(contacts.map(c => c.id !== existingContacts[0].id ? c : newContact))
             setNewName('')
             setNewPhoneNumber('')
+            setMessage({ text: `Updated contact: ${newContact.name}`, type: 'success' })
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
           })
       }
       
@@ -54,6 +61,10 @@ const App = () => {
           setContacts(contacts.concat(newContact))
           setNewName('')
           setNewPhoneNumber('')
+          setMessage({ text: `Added contact: ${newContact.name}`, type: 'success' })
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })   
     }
   }
@@ -63,8 +74,11 @@ const App = () => {
       people
         .deleteContact(person.id)
         .then(response => {
-          console.log(response)
           setContacts(contacts.filter(c => c.id !== person.id))
+          setMessage({ text: `Deleted contact: ${person.name}`, type: 'success' })
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         });
     }
   }
@@ -72,6 +86,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message}/>
       <Filter query={query} handleQueryChange={handleQueryChange}/>
       <ContactForm 
         onSubmit={addNewContact} 
