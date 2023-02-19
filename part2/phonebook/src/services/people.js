@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/persons';
+const baseUrl = 'http://localhost:3001/api/persons';
 
 function getContact(id=undefined) {
   const request = id === undefined ? axios.get(baseUrl) : axios.get(`${baseUrl}/${id}`);
