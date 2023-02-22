@@ -53,10 +53,10 @@ const App = () => {
             }, 3000)
           })
           .catch(error => {
-            setMessage({ text: `${newName} has been already removed from server`, type: 'error' })
-            setTimeout(() => {
-              setMessage(null)
-            }, 3000)
+            setMessage({ text: error.response.data.error, type: 'error' })
+              setTimeout(() => {
+                setMessage(null)
+              }, 3000)
           })
       }
       
@@ -71,7 +71,13 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
           }, 3000)
-        })   
+        })
+        .catch(error => {
+          setMessage({ text: error.response.data.error, type: 'error' })
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
+        })
     }
   }
 
