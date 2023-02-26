@@ -1,17 +1,20 @@
+const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
+const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
-const mongoUrl = 'mongodb+srv://tta:kM4650iZ020A0Dqn@fullstackopen.qou3pzj.mongodb.net/blogList?retryWrites=true&w=majority'
-mongoose.connect(mongoUrl)
+logger.info('connecting to', config.MONGODB_URI)
+
+mongoose.connect(config.MONGODB_URI)
   .then(() => {
-    console.log('connected to MongoDB')
+    logger.info('connected to MongoDB')
   })
   .catch((error) => {
-    console.error('error connecting to MongoDB:', error.message)
+    logger.error('error connecting to MongoDB:', error.message)
   })
 
 app.use(cors())
