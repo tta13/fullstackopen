@@ -79,6 +79,62 @@ test('if the title or url properties are missing, the backend responds with stat
     .expect(400)
 })
 
+test('if the id exists, the correct blog post is deleted and the backend responds with 204', async () => {
+  let blogs = await helper.blogsInDb()
+  const blogToDelete = blogs[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  blogs = await helper.blogsInDb()
+
+  expect(blogs).toHaveLength(
+    helper.initialBlogs.length - 1
+  )
+
+  const contents = blogs.map(r => r.title)
+
+  expect(contents).not.toContain(blogToDelete.title)
+})
+
+test('if the id doesn\'t exist, no blog post is deleted, but the back still responds with 204', async () => {
+  const blogs = await helper.blogsInDb()
+  const validId = '63fb75ed0da424c326c18b37'
+
+  await api
+    .delete(`/api/blogs/${validId}`)
+    .expect(204)
+
+  expect(blogs).toHaveLength(helper.initialBlogs.length)
+})
+
+test('if the id exists, the correct blog post is updated and the backend responds with status code 200', async () => {
+  let blogs = await helper.blogsInDb()
+  const blogToUpdate = blogs[1]
+  const newLikes = 12
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send({ likes: newLikes })
+    .expect(200)
+
+    const blog = await helper.findBlogInDb(blogToUpdate.id)
+
+    expect(blog).not.toEqual(null)
+    expect(blog.likes).toEqual(newLikes)
+})
+
+test('if the id does not exist, no post is updated and the backend responds with status code 404', async () => {
+  const validId = '63fb75ed0da424c326c18b37'
+  const newLikes = 12
+
+  await api
+    .put(`/api/blogs/${validId}`)
+    .send({ likes: newLikes })
+    .expect(404)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
