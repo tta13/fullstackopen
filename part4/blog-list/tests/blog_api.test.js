@@ -52,6 +52,22 @@ test('making an HTTP POST request to the /api/blogs route successfully creates a
   expect(contents).toContain('Out of Context Football')
 })
 
+test('if the likes property is missing from the request, it will default to the value 0', async () => {
+  const newBlogPost = {
+    title:"Out of Context Football",
+    author:"Mark Carry",
+    url:"https://twitter.com/nocontextfooty",
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlogPost)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(response.body.likes).toEqual(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
