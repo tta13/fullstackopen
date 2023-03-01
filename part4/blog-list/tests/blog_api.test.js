@@ -29,6 +29,29 @@ test('the unique identifier property of the blog posts is named id', async () =>
   response.body.forEach(blog => expect(blog.id).toBeDefined())
 })
 
+test('making an HTTP POST request to the /api/blogs route successfully creates a new blog post', async () => {
+  const newBlogPost = {
+    title:"Out of Context Football",
+    author:"Mark Carry",
+    url:"https://twitter.com/nocontextfooty",
+    likes:1825
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlogPost)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  
+  expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
+
+  const contents = response.body.map(r => r.title)
+
+  expect(contents).toContain('Out of Context Football')
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
