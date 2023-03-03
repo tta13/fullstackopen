@@ -56,12 +56,12 @@ const initialUsers = [
   {
     username: "hellas",
     name: "Arto Hellas",
-    id: "6401fab1b75f1634eef86735"
+    id: "6401fab1b75f1634eef86735",
   },
   {
-      username: "mluukkai",
-      name: "Matti Luukkainen",
-      id: "6401faceb75f1634eef86737"
+    username: "mluukkai",
+    name: "Matti Luukkainen",
+    id: "6401faceb75f1634eef86737",
   }
 ]
 

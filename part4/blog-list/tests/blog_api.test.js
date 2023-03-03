@@ -4,12 +4,25 @@ const app = require('../app')
 const api = supertest(app)
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
+
+const PASSWORD = 'salasana'
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+  
+  const passwordHash = await bcrypt.hash(PASSWORD, 10)
+  const user = new User({
+    username: helper.initialUsers[0].username,
+    name: helper.initialUsers[0].name,
+    passwordHash
+  })
+  const savedUser = await user.save()
   
   const blogObjects = helper.initialBlogs
-    .map(blog => new Blog(blog))
+    .map(blog => new Blog({ ...blog, user: savedUser.id }))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
 })
@@ -29,16 +42,41 @@ test('the unique identifier property of the blog posts is named id', async () =>
   response.body.forEach(blog => expect(blog.id).toBeDefined())
 })
 
-test('making an HTTP POST request to the /api/blogs route successfully creates a new blog post', async () => {
+test('making an HTTP POST request to the /api/blogs route returns 401 Unauthorized if user did not provide a token', async () => {
   const newBlogPost = {
     title:"Out of Context Football",
     author:"Mark Carry",
     url:"https://twitter.com/nocontextfooty",
-    likes:1825
+    likes: 1825
   }
 
   await api
     .post('/api/blogs')
+    .send(newBlogPost)
+    .expect(401)
+})
+
+test('making an HTTP POST request to the /api/blogs route successfully creates a new blog post if the user is logged in', async () => {
+  const newBlogPost = {
+    title:"Out of Context Football",
+    author:"Mark Carry",
+    url:"https://twitter.com/nocontextfooty",
+    likes: 1825
+  }
+
+  const users = await helper.usersInDb()
+  const user = users[0]
+  
+  const login = await api
+    .post('/api/login')
+    .send({ username: user.username, password: PASSWORD })
+    .expect(200)
+
+  const token = login.body.token
+
+  await api
+    .post('/api/blogs')
+    .auth(token, { type: 'bearer' })
     .send(newBlogPost)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -59,8 +97,19 @@ test('if the likes property is missing from the request, it will default to the 
     url:"https://twitter.com/nocontextfooty",
   }
 
+  const users = await helper.usersInDb()
+  const user = users[0]
+  
+  const login = await api
+    .post('/api/login')
+    .send({ username: user.username, password: PASSWORD })
+    .expect(200)
+
+  const token = login.body.token
+
   const response = await api
     .post('/api/blogs')
+    .auth(token, { type: 'bearer' })
     .send(newBlogPost)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -73,8 +122,19 @@ test('if the title or url properties are missing, the backend responds with stat
     author: "Mark Carry"
   }
 
+  const users = await helper.usersInDb()
+  const user = users[0]
+  
+  const login = await api
+    .post('/api/login')
+    .send({ username: user.username, password: PASSWORD })
+    .expect(200)
+
+  const token = login.body.token
+
   await api
     .post('/api/blogs')
+    .auth(token, { type: 'bearer' })
     .send(newBlogPost)
     .expect(400)
 })
@@ -83,8 +143,19 @@ test('if the id exists, the correct blog post is deleted and the backend respond
   let blogs = await helper.blogsInDb()
   const blogToDelete = blogs[0]
 
+  const users = await helper.usersInDb()
+  const user = users[0]
+  
+  const login = await api
+    .post('/api/login')
+    .send({ username: user.username, password: PASSWORD })
+    .expect(200)
+
+  const token = login.body.token
+
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
+    .auth(token, { type: 'bearer' })
     .expect(204)
 
   blogs = await helper.blogsInDb()
@@ -102,8 +173,19 @@ test('if the id doesn\'t exist, no blog post is deleted, but the back still resp
   const blogs = await helper.blogsInDb()
   const validId = '63fb75ed0da424c326c18b37'
 
+  const users = await helper.usersInDb()
+  const user = users[0]
+  
+  const login = await api
+    .post('/api/login')
+    .send({ username: user.username, password: PASSWORD })
+    .expect(200)
+
+  const token = login.body.token
+
   await api
     .delete(`/api/blogs/${validId}`)
+    .auth(token, { type: 'bearer' })
     .expect(204)
 
   expect(blogs).toHaveLength(helper.initialBlogs.length)
