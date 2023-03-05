@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Login from './components/Login'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -15,6 +16,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -32,12 +34,20 @@ const App = () => {
   }, [])
 
   const handleAddBlog = (event) => {
+    event.preventDefault()
+
     blogService
       .create({ title, author, url})
       .then(newBlog => {
         setBlogs(blogs.concat(newBlog))
-        console.log('add new blog', newBlog)
+        setMessage({ text: `New blog \"${newBlog.title}\" added`, type: 'success' })
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
+      setTitle('')
+      setAuthor('')
+      setUrl('')
   }
 
   const handleLogin = (event) => {
@@ -55,7 +65,10 @@ const App = () => {
           setPassword('')
         })
         .catch (exception => {
-          console.log('Incorrect username or password')
+          setMessage({ text: 'Incorrect username or password', type: 'error' })
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
   }
 
@@ -67,7 +80,8 @@ const App = () => {
 
   const loginForm = () => (
     <div>
-      <h2>Log in to the app</h2>
+      <h2>Log in to the app</h2>      
+      <Notification message={message}/>
       <Login handleLogin={handleLogin}
         username={username}
         setUsername={setUsername}
@@ -78,7 +92,8 @@ const App = () => {
   
   const blogList = () => (
     <div>
-      <h2>blogs</h2>
+      <h2>blogs</h2>      
+      <Notification message={message}/>
       <span>{user.name} logged in</span><button onClick={handleLogout}>logout</button>
 
       <h2>create new blog</h2>
