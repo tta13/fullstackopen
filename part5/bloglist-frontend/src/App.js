@@ -18,9 +18,11 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const compareBlogs = (a, b) => b.likes - a.likes
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs(blogs.sort(compareBlogs))
     )  
   }, [])
 
@@ -39,7 +41,7 @@ const App = () => {
     blogService
       .create({ title, author, url})
       .then(newBlog => {
-        setBlogs(blogs.concat(newBlog))
+        setBlogs(blogs.concat(newBlog).sort(compareBlogs))
         setMessage({ text: `New blog "${newBlog.title}" added`, type: 'success' })
         setTimeout(() => {
           setMessage(null)
@@ -52,7 +54,7 @@ const App = () => {
       .like(blog)
       .then(updatedBlog => {
         console.log(updatedBlog)
-        setBlogs(blogs.map(b => updatedBlog.id === b.id ? updatedBlog : b))
+        setBlogs(blogs.map(b => updatedBlog.id === b.id ? updatedBlog : b).sort(compareBlogs))
         setMessage({ text: `Blog "${updatedBlog.title}" updated`, type: 'success' })
         setTimeout(() => {
           setMessage(null)
