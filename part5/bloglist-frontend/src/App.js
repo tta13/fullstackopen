@@ -66,7 +66,27 @@ const App = () => {
           setMessage(null)
         }, 5000)
       })
-  } 
+  }
+
+  const removeBlog = blog => {
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      blogService
+        .remove(blog.id)
+        .then(_ => {
+          setBlogs(blogs.filter(b => b.id !== blog.id).sort(compareBlogs))
+          setMessage({ text: `Blog "${blog.title}" deleted`, type: 'success' })
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setMessage({ text:  error.response.data.error, type: 'error' })
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+    }
+  }
 
   const handleLogin = (event) => {
     event.preventDefault()
@@ -119,7 +139,13 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} like={likeBlog} />
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          like={likeBlog}
+          remove={removeBlog}
+          user={user}
+        />
       )}
     </div>
   )
