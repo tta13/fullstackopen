@@ -15,9 +15,9 @@ const BlogForm = ({ createBlog }) => {
     setUrl('')
   }
 
-  
+
   return (
-    <div>      
+    <div>
       <h2>create new blog</h2>
       <form onSubmit={addBlog}>
         <div>
@@ -45,7 +45,7 @@ const BlogForm = ({ createBlog }) => {
           />
         </div>
         <button type="submit">create</button>
-      </form>  
+      </form>
     </div>
   )
 }

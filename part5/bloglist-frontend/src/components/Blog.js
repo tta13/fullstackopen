@@ -15,7 +15,7 @@ const Blog = ({ blog, like, remove, user }) => {
   const toggleVisibility = () => {
     setDetailsVisible(!detailsVisible)
   }
-  
+
   const showWhenVisible = { display: detailsVisible ? '' : 'none' }
   const buttonLabel = detailsVisible ? 'hide' : 'show'
 
@@ -32,7 +32,7 @@ const Blog = ({ blog, like, remove, user }) => {
           <button onClick={() => like(blog)}>like</button>
         </div>
         <div>{blog.user.name}</div>
-        <button 
+        <button
           style={{ display: user.username === blog.user.username ? '' : 'none' }}
           onClick={() => remove(blog)}>remove</button>
       </div>
