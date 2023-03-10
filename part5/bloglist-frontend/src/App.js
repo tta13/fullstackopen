@@ -39,6 +39,7 @@ const App = () => {
     blogService
       .create({ title, author, url})
       .then(newBlog => {
+        console.log(newBlog)
         setBlogs(blogs.concat(newBlog))
         setMessage({ text: `New blog "${newBlog.title}" added`, type: 'success' })
         setTimeout(() => {
