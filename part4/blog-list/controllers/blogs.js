@@ -30,7 +30,9 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
   user.blogs = user.blogs.concat(result._id)
   await user.save()
 
-  response.status(201).json(result)
+  const resultWithUser = await result.populate('user', { username: 1, name: 1 })
+
+  response.status(201).json(resultWithUser)
 })
 
 blogsRouter.delete('/:id', userExtractor, async (request, response) => {
@@ -61,7 +63,10 @@ blogsRouter.put('/:id', async (request, response) => {
   if(updatedBlog === null) {
     return response.status(404).send({ error: 'blog post not found' })
   }
-  response.json(updatedBlog)
+
+  const result = await updatedBlog.populate('user', { username: 1, name: 1 })
+
+  response.json(result)
 })
 
 module.exports = blogsRouter

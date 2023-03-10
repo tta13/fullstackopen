@@ -39,7 +39,6 @@ const App = () => {
     blogService
       .create({ title, author, url})
       .then(newBlog => {
-        console.log(newBlog)
         setBlogs(blogs.concat(newBlog))
         setMessage({ text: `New blog "${newBlog.title}" added`, type: 'success' })
         setTimeout(() => {
@@ -47,6 +46,25 @@ const App = () => {
         }, 5000)
       })
   }
+
+  const likeBlog = blog => {
+    blogService
+      .like(blog)
+      .then(updatedBlog => {
+        console.log(updatedBlog)
+        setBlogs(blogs.map(b => updatedBlog.id === b.id ? updatedBlog : b))
+        setMessage({ text: `Blog "${updatedBlog.title}" updated`, type: 'success' })
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
+      .catch (exception => {
+        setMessage({ text: 'Error updating number of likes of post', type: 'error' })
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
+  } 
 
   const handleLogin = (event) => {
     event.preventDefault()
@@ -99,7 +117,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} like={likeBlog} />
       )}
     </div>
   )
