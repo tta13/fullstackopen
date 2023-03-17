@@ -25,7 +25,7 @@ const Blog = ({ blog, like, remove, user }) => {
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{buttonLabel}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="toggableContent">
         <div>{blog.url}</div>
         <div>
           likes {blog.likes}
