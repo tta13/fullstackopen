@@ -40,15 +40,10 @@ describe('Blog app', function() {
     describe('When logged in', function() {
       beforeEach(function() {
         // log in by-passing the UI
-        cy.request('POST', 'http://localhost:3003/api/login', {
-          username: 'mluukkai', password: 'salainen'
-        }).then(response => {
-          localStorage.setItem('loggedBlogListAppUser', JSON.stringify(response.body))
-          cy.visit('http://localhost:3000')
-        })
+        cy.login({ username: 'mluukkai', password: 'salainen' })
       })
 
-      it('A blog can be created', function() {
+      it('a blog can be created', function() {
         cy.contains('new blog').click()
         cy.get('input[placeholder="title"').type('New Blog')
         cy.get('input[placeholder="author"').type('New Blog\'s author')
@@ -57,6 +52,45 @@ describe('Blog app', function() {
 
         cy.get('#blog-list').contains('New Blog')
       })
+
+      describe('When there are blogs in the page', function () {
+        beforeEach(function () {
+          const blogs = [
+            {
+              title: 'React patterns',
+              author: 'Michael Chan',
+              url: 'https://reactpatterns.com/',
+              likes: 7
+            },
+            {
+              title: 'Go To Statement Considered Harmful',
+              author: 'Edsger W. Dijkstra',
+              url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+              likes: 5
+            },
+            {
+              title: 'Canonical string reduction',
+              author: 'Edsger W. Dijkstra',
+              url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+              likes: 12
+            }
+          ]
+          // create multiple blogs
+          blogs.forEach(blog => cy.createBlog(blog))
+        })
+
+        it.only('users can like a blog', function () {
+          cy.contains('Canonical string reduction')
+            .contains('show')
+            .click()
+            .parent()
+            .parent()
+            .contains('like').click()
+
+          cy.contains('Canonical string reduction').parent().contains('likes 13')
+        })
+      })
+
     })
   })
 })
