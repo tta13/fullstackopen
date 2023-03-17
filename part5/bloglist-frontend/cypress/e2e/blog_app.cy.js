@@ -79,7 +79,7 @@ describe('Blog app', function() {
           blogs.forEach(blog => cy.createBlog(blog))
         })
 
-        it.only('users can like a blog', function () {
+        it('users can like a blog', function () {
           cy.contains('Canonical string reduction')
             .contains('show')
             .click()
@@ -89,8 +89,23 @@ describe('Blog app', function() {
 
           cy.contains('Canonical string reduction').parent().contains('likes 13')
         })
-      })
 
+        it('the user who created a blog can delete it', function () {
+          cy.contains('Canonical string reduction')
+            .contains('show')
+            .click()
+            .parent()
+            .parent()
+            .contains('remove')
+            .click()
+
+          cy.on('window:confirm', (str) => {
+            expect(str).to.eq('Remove blog Canonical string reduction by Edsger W. Dijkstra?')
+          })
+          cy.get('.success')
+            .should('contain', 'Blog "Canonical string reduction" deleted')
+        })
+      })
     })
   })
 })
