@@ -130,6 +130,26 @@ describe('Blog app', function() {
             .should('have.css', 'display')
             .should('contain', 'none')
         })
+
+        it('the blogs are descendingly ordered according to likes', function () {
+          // before clicking the like button
+          cy.get('.blog').eq(0).should('contain', 'Canonical string reduction')
+          cy.get('.blog').eq(1).should('contain', 'React patterns')
+
+          // after clicking the like button
+          cy.contains('React patterns')
+            .contains('show')
+            .click()
+            .parent()
+            .parent()
+            .contains('like').as('like-button')
+          for(var i=0; i<7; i++) {
+            cy.get('@like-button').click()
+            cy.wait(500)
+          }
+          cy.get('.blog').eq(0).should('contain', 'React patterns')
+          cy.get('.blog').eq(1).should('contain', 'Canonical string reduction')
+        })
       })
     })
   })

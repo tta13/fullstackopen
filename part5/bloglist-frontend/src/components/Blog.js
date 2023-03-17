@@ -20,7 +20,7 @@ const Blog = ({ blog, like, remove, user }) => {
   const buttonLabel = detailsVisible ? 'hide' : 'show'
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div>
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{buttonLabel}</button>
