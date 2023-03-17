@@ -16,7 +16,7 @@ describe('Blog app', function() {
         name: 'Matti Luukkainen',
         password: 'salainen'
       }
-      cy.request('POST', 'http://localhost:3003/api/users/', user)
+      cy.addUser(user)
     })
 
     it('succeeds with correct credentials', function() {
@@ -104,6 +104,31 @@ describe('Blog app', function() {
           })
           cy.get('.success')
             .should('contain', 'Blog "Canonical string reduction" deleted')
+        })
+
+        it('only the creator can see the remove button of a blog, not anyone else', function () {
+          cy.contains('Canonical string reduction')
+            .contains('show')
+            .click()
+            .parent()
+            .parent()
+            .contains('remove')
+
+          cy.contains('logout').click()
+
+          // add new user
+          cy.addUser({ username: 'tta', name: 'Tales Alves', password: '123456' })
+          // log in as new user
+          cy.login({ username: 'tta', password: '123456' })
+
+          cy.contains('Canonical string reduction')
+            .contains('show')
+            .click()
+            .parent()
+            .parent()
+            .contains('remove')
+            .should('have.css', 'display')
+            .should('contain', 'none')
         })
       })
     })
