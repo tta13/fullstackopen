@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { addVote } from '../reducers/anecdoteReducer'
+import { updateMessage } from '../reducers/messageReducer'
 
 const Anecdote = ({ anecdote, handleVote }) => {
   return (
@@ -24,6 +25,10 @@ const AnecdoteList = () => {
 
   const vote = (id) => {
     dispatch(addVote(id))
+    dispatch(updateMessage(`you voted "${anecdotes.filter(a => a.id === id)[0].content}"`))
+    setTimeout(() => {
+      dispatch(updateMessage(''))
+    }, 5000)
   }
 
   const byVote = (a, b) => b.votes - a.votes
