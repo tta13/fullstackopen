@@ -10,7 +10,7 @@ const Anecdote = ({ anecdote, handleVote }) => {
       </div>
       <div>
         has {anecdote.votes}
-        <button onClick={() => handleVote(anecdote.id)}>vote</button>
+        <button onClick={() => handleVote(anecdote)}>vote</button>
       </div>
     </div>
   )
@@ -23,9 +23,9 @@ const AnecdoteList = () => {
     return anecdotes.filter(a => a.content.toLowerCase().includes(filter.toLowerCase()))
   })
 
-  const vote = (id) => {
-    dispatch(addVote(id))
-    dispatch(updateMessage(`you voted "${anecdotes.filter(a => a.id === id)[0].content}"`))
+  const vote = (anecdote) => {
+    dispatch(addVote(anecdote))
+    dispatch(updateMessage(`you voted "${anecdote.content}"`))
     setTimeout(() => {
       dispatch(updateMessage(''))
     }, 5000)
