@@ -23,7 +23,7 @@
     {
       "content": "Premature optimization is the root of all evil.",
       "id": "25170",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
@@ -32,18 +32,38 @@
     },
     {
       "content": "JavaScript is bananas",
-      "votes": 3,
+      "votes": 4,
       "id": "O9BazDk"
     },
     {
       "content": "Java is to Javascript what car is to Carpet",
-      "votes": 5,
+      "votes": 6,
       "id": "ubCk7XI"
     },
     {
       "content": "Code is coding",
       "votes": 1,
       "id": "6rLr-SG"
+    },
+    {
+      "content": "Vasco da gama",
+      "votes": 1,
+      "id": "GQuAP-q"
+    },
+    {
+      "content": "Hello, World!",
+      "votes": 1,
+      "id": "x8MSpK_"
+    },
+    {
+      "content": "Hello, World!",
+      "votes": 3,
+      "id": "ouoLPRf"
+    },
+    {
+      "content": "Another one",
+      "votes": 0,
+      "id": "k8nJ54v"
     }
   ]
 }

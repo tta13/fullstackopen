@@ -10,9 +10,20 @@ const messageSlice = createSlice({
   reducers: {
     updateMessage(state, action) {
       return action.payload
+    },
+    clearMessage(state, action) {
+      return ''
     }
   }
 })
 
-export const { updateMessage } = messageSlice.actions
+export const { updateMessage, clearMessage } = messageSlice.actions
+
+export const setMessage = (message, timeInSeconds) => async dispatch => {
+  dispatch(updateMessage(message))
+  setTimeout(() => {
+    dispatch(clearMessage())
+  }, timeInSeconds*1000)
+}
+
 export default messageSlice.reducer
