@@ -2,8 +2,11 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useQueryClient, useMutation } from 'react-query'
 import { getAll, update } from './services/anecdotes'
+import NotificationContext, { notificationReducer } from './NotificationContext'
+import { useReducer } from 'react'
 
 const App = () => {
+  const [notification, notificationDispatch] = useReducer(notificationReducer, '')
   const queryClient = useQueryClient()
   const { isLoading, isError, data } = useQuery(
     'anecdotes', getAll,
@@ -30,15 +33,17 @@ const App = () => {
   
   const handleVote = (anecdote) => {
     updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
+    notificationDispatch({ type: 'SET', payload: `anecdote '${anecdote.content}' voted` })
+    setTimeout(() => {
+      notificationDispatch({ type: 'CLEAR' })
+    }, 5000)
   }
 
-  return (
+  return (    
     <div>
       <h3>Anecdote app</h3>
-    
-      <Notification />
-      <AnecdoteForm />
-    
+      <Notification message={notification}/>
+      <AnecdoteForm notificationDispatch={notificationDispatch}/>
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>

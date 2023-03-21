@@ -3,7 +3,7 @@
     {
       "content": "If it hurts, do it more often",
       "id": "47145",
-      "votes": 0
+      "votes": 3
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
@@ -32,13 +32,38 @@
     },
     {
       "content": "Hello, World!",
-      "votes": 2,
+      "votes": 3,
       "id": "yZh8vDs"
     },
     {
       "content": "JavaScript is bananas",
       "votes": 3,
       "id": "S92i96h"
+    },
+    {
+      "content": "JavaScript is bananas",
+      "votes": 0,
+      "id": "C_gq5oh"
+    },
+    {
+      "content": "Code is coding",
+      "votes": 0,
+      "id": "9LX5VyX"
+    },
+    {
+      "content": "Java is to Javascript what car is to Carpet",
+      "votes": 1,
+      "id": "a2Ae2p-"
+    },
+    {
+      "content": "Vasco da gama",
+      "votes": 0,
+      "id": "aDro4ky"
+    },
+    {
+      "content": "JavaScript is bananas",
+      "votes": 0,
+      "id": "4cDbFlB"
     }
   ]
 }
