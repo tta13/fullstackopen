@@ -1,4 +1,9 @@
 import axios from 'axios'
 
+const baseUrl = 'http://localhost:3001/anecdotes'
+
 export const getAll = () =>
-  axios.get('http://localhost:3001/anecdotes').then(res => res.data)
+  axios.get(baseUrl).then(res => res.data)
+
+export const create = newAnecdote =>
+  axios.post(baseUrl, newAnecdote).then(res => res.data)
