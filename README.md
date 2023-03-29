@@ -35,3 +35,7 @@ Exercises at [./part5](./part5) and [./part4](./part4)
 Learning about the Redux library directly supported by React.
 
 Exercises at [./part6](./part6)
+
+## Part 7: React router, custom hooks, styling app with CSS and Webpack
+
+Exercises at [./part7](./part7)
